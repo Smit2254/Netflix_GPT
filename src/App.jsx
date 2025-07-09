@@ -1,11 +1,8 @@
 import './App.css';
+import Body from './components/Body';
 
 function App() {
-  return (
-    <>
-      <p className='text-3xl font-bold text-red-300'>Namaste Everyone, Lets Make Nexflix GPT</p>
-    </>
-  );
+  return <Body />;
 }
 
 export default App;
