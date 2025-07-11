@@ -1,11 +1,68 @@
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 import Header from './Header';
+import { checkValidData } from '../utils/validate';
+import { createUserWithEmailAndPassword, signInWithEmailAndPassword, updateProfile } from 'firebase/auth';
+import { auth } from '../utils/firebase';
+import { useNavigate } from 'react-router-dom';
+import { useDispatch } from 'react-redux';
+import { addUser } from '../utils/userSlice';
 
 const Login = () => {
   const [isSignInForm, setIsSignInForm] = useState(true);
+  const [errorMessage, setErrorMessage] = useState(null);
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
+
+  const name = useRef(null);
+  const email = useRef(null);
+  const password = useRef(null);
 
   const toggleSignInForm = () => {
     setIsSignInForm(!isSignInForm);
+  };
+
+  const handleButtonClick = () => {
+    const message = checkValidData(email.current.value, password.current.value);
+    setErrorMessage(message);
+    if (message) return;
+
+    if (!isSignInForm) {
+      createUserWithEmailAndPassword(auth, email.current.value, password.current.value)
+        .then((userCredential) => {
+          // Signed up
+          const user = userCredential.user;
+          updateProfile(user, {
+            displayName: name.current.value,
+            photoURL: 'https://avatars.githubusercontent.com/u/134258519?v=4',
+          })
+            .then(() => {
+              const { uid, email, displayName, photoURL } = auth.currentUser;
+              dispatch(addUser({ uid: uid, email: email, displayName: displayName, photoURL: photoURL }));
+              navigate('/browse');
+            })
+            .catch((error) => {
+              setErrorMessage(error);
+            });
+        })
+        .catch((error) => {
+          const errorCode = error.code;
+          const errorMessage = error.message;
+          setErrorMessage(errorCode + '-' + errorMessage);
+        });
+    } else {
+      signInWithEmailAndPassword(auth, email.current.value, password.current.value)
+        .then((userCredential) => {
+          // Signed in
+          const user = userCredential.user;
+          console.log(user);
+          navigate('/browse');
+        })
+        .catch((error) => {
+          const errorCode = error.code;
+          const errorMessage = error.message;
+          setErrorMessage(errorCode + '-' + errorMessage);
+        });
+    }
   };
 
   return (
@@ -22,26 +79,30 @@ const Login = () => {
         <div className='flex items-center justify-center h-full px-4'>
           <div className='w-full max-w-md bg-black/85 p-12 rounded-lg shadow-lg'>
             <h1 className='text-3xl font-semibold text-white mb-6'>{isSignInForm ? 'Sign In' : 'Sign Up'}</h1>
-            <form className='flex flex-col space-y-4'>
+            <form onSubmit={(e) => e.preventDefault()} className='flex flex-col space-y-4'>
               {!isSignInForm && (
                 <input
+                  ref={name}
                   type='text'
                   placeholder='Full Name'
                   className='p-3 rounded bg-zinc-800 text-white placeholder-gray-400 focus:outline-none'
                 />
               )}
               <input
+                ref={email}
                 type='email'
                 placeholder='Email or phone number'
                 className='p-3 rounded bg-zinc-800 text-white placeholder-gray-400 focus:outline-none'
               />
               <input
+                ref={password}
                 type='password'
                 placeholder='Password'
                 className='p-3 rounded bg-zinc-800 text-white placeholder-gray-400 focus:outline-none'
               />
+              <p className='text-red-600 font-bold text-lg p-2'>{errorMessage}</p>
               <button
-                type='submit'
+                onClick={handleButtonClick}
                 className='bg-red-600 hover:bg-red-700 transition-colors text-white py-3 rounded font-semibold'
               >
                 {isSignInForm ? 'Sign In' : 'Sign Up'}
