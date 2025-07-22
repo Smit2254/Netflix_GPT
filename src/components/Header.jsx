@@ -5,6 +5,7 @@ import { useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { addUser, removeUser } from '../utils/userSlice';
 import { LOGO } from '../utils/constant';
+import { toggleGptSearchView } from '../utils/gptSlice';
 
 const Header = () => {
   const [scrolled, setScrolled] = useState(false);
@@ -17,14 +18,6 @@ const Header = () => {
     window.addEventListener('scroll', onScroll);
     return () => window.removeEventListener('scroll', onScroll);
   }, []);
-
-  const handleSignOut = () => {
-    signOut(auth)
-      .then(() => {})
-      .catch((error) => {
-        navigate('/error');
-      });
-  };
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (user) => {
@@ -41,6 +34,18 @@ const Header = () => {
     //Unsubscribe when component unmounts
     return () => unsubscribe();
   }, []);
+
+  const handleSignOut = () => {
+    signOut(auth)
+      .then(() => {})
+      .catch((error) => {
+        navigate('/error');
+      });
+  };
+
+  const handleGptSearch = () => {
+    dispatch(toggleGptSearchView());
+  };
 
   return (
     <header
@@ -65,9 +70,16 @@ const Header = () => {
 
         {user && (
           <div className='flex items-center gap-4'>
+            <button
+              className='group relative inline-flex items-center overflow-hidden rounded-md bg-gradient-to-br from-purple-600 to-purple-700 px-5 py-2.5 text-sm font-semibold text-white shadow-lg transition duration-300 ease-in-out hover:from-purple-500 hover:to-purple-600 hover:shadow-xl cursor-pointer'
+              onClick={handleGptSearch}
+            >
+              <span className='absolute inset-0 h-full w-full scale-0 transform bg-white opacity-10 transition-transform duration-300 ease-out group-hover:scale-100' />
+              GPT Search
+            </button>
             <img className='w-10 h-10 rounded-md object-cover' alt='User Icon' src={user.photoURL} />
             <button
-              className='group relative inline-flex items-center overflow-hidden rounded-md bg-gradient-to-br from-red-600 to-red-700 px-5 py-2.5 text-sm font-semibold text-white shadow-lg transition duration-300 ease-in-out hover:from-red-500 hover:to-red-600 hover:shadow-xl'
+              className='group relative inline-flex items-center overflow-hidden rounded-md bg-gradient-to-br from-red-600 to-red-700 px-5 py-2.5 text-sm font-semibold text-white shadow-lg transition duration-300 ease-in-out hover:from-red-500 hover:to-red-600 hover:shadow-xl cursor-pointer'
               onClick={handleSignOut}
             >
               <span className='absolute inset-0 h-full w-full scale-0 transform bg-white opacity-10 transition-transform duration-300 ease-out group-hover:scale-100' />

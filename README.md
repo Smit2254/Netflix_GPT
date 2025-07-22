@@ -32,6 +32,8 @@
 - TMDB Image cdn url
 - Styled the Browse Page with TailwindCss
 - Made Custom Hooks to Fetch Movies Data
+- GPT Search Page
+- GPT Search Bar
 
 # Features
 
