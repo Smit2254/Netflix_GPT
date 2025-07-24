@@ -35,6 +35,11 @@ const Header = () => {
     return () => unsubscribe();
   }, []);
 
+  const scrollToSection = (id) => {
+    const el = document.getElementById(id);
+    if (el) el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  };
+
   const handleSignOut = () => {
     signOut(auth)
       .then(() => {})
@@ -58,12 +63,25 @@ const Header = () => {
         <div className='flex items-center gap-10'>
           <img className='w-28 md:w-36' src={LOGO} alt='Netflix Logo' />
           {user && (
-            <ul className='hidden md:flex gap-6 text-sm text-white font-semibold'>
-              <li className='hover:text-gray-300 transition'>Home</li>
-              <li className='hover:text-gray-300 transition'>TV Shows</li>
-              <li className='hover:text-gray-300 transition'>Movies</li>
-              <li className='hover:text-gray-300 transition'>New & Popular</li>
-              <li className='hover:text-gray-300 transition'>My List</li>
+            <ul className='hidden lg:flex gap-6 text-sm text-white font-semibold'>
+              <li className='hover:text-gray-300 transition cursor-pointer' onClick={handleGptSearch}>
+                Home
+              </li>
+              <li
+                className='hover:text-gray-300 transition cursor-pointer'
+                onClick={() => scrollToSection('top-rated')}
+              >
+                Top-Rated
+              </li>
+              <li className='hover:text-gray-300 transition cursor-pointer' onClick={() => scrollToSection('tv-shows')}>
+                TV Shows
+              </li>
+              <li className='hover:text-gray-300 transition cursor-pointer' onClick={() => scrollToSection('popular')}>
+                New & Popular
+              </li>
+              <li className='hover:text-gray-300 transition cursor-pointer' onClick={() => scrollToSection('upcoming')}>
+                Upcoming
+              </li>
             </ul>
           )}
         </div>
@@ -77,7 +95,7 @@ const Header = () => {
               <span className='absolute inset-0 h-full w-full scale-0 transform bg-white opacity-10 transition-transform duration-300 ease-out group-hover:scale-100' />
               GPT Search
             </button>
-            <img className='w-10 h-10 rounded-md object-cover' alt='User Icon' src={user.photoURL} />
+            <img className='hidden md:flex w-10 h-10 rounded-md object-cover' alt='User Icon' src={user.photoURL} />
             <button
               className='group relative inline-flex items-center overflow-hidden rounded-md bg-gradient-to-br from-red-600 to-red-700 px-5 py-2.5 text-sm font-semibold text-white shadow-lg transition duration-300 ease-in-out hover:from-red-500 hover:to-red-600 hover:shadow-xl cursor-pointer'
               onClick={handleSignOut}

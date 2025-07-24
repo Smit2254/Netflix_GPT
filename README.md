@@ -34,6 +34,10 @@
 - Made Custom Hooks to Fetch Movies Data
 - GPT Search Page
 - GPT Search Bar
+- Memoization
+- Added .env file
+- Adding .env file to gitIgnore
+- Made the Site Responsive using TailwindCSS
 
 # Features
 

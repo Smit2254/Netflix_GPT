@@ -1,5 +1,5 @@
 const GptMovieSuggestion = () => {
-  return <div>GptMovieSuggestion</div>;
+  return <div></div>;
 };
 
 export default GptMovieSuggestion;

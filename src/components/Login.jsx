@@ -65,14 +65,16 @@ const Login = () => {
     <div>
       <Header />
       <div className='absolute'>
-        <img src={BG_IMAGE} alt='Background Image' />
+        <img className='h-screen md:h-full w-screen object-cover' src={BG_IMAGE} alt='Background Image' />
       </div>
 
-      <div className='absolute right-0 left-0 top-48 mx-auto '>
-        <div className='flex items-center justify-center h-full px-4'>
-          <div className='w-full max-w-md bg-black/85 p-12 rounded-lg shadow-lg'>
-            <h1 className='text-3xl font-semibold text-white mb-6'>{isSignInForm ? 'Sign In' : 'Sign Up'}</h1>
-            <form onSubmit={(e) => e.preventDefault()} className='flex flex-col space-y-4'>
+      <div className='absolute right-0 left-0 top-20 md:top-48 mx-auto '>
+        <div className='flex items-center justify-center h-full px-2 md:px-4'>
+          <div className='w-full max-w-md bg-black/85 p-6 md:p-12 rounded-lg shadow-lg'>
+            <h1 className='text-xl md:text-3xl font-semibold text-white mb-6'>
+              {isSignInForm ? 'Sign In' : 'Sign Up'}
+            </h1>
+            <form onSubmit={(e) => e.preventDefault()} className='flex flex-col space-y-1 md:space-y-4'>
               {!isSignInForm && (
                 <input
                   ref={name}
@@ -100,7 +102,7 @@ const Login = () => {
               >
                 {isSignInForm ? 'Sign In' : 'Sign Up'}
               </button>
-              <div className='flex items-center justify-between text-sm text-gray-400'>
+              <div className='hidden md:flex items-center justify-between text-sm text-gray-400'>
                 <label className='flex items-center space-x-2'>
                   <input type='checkbox' className='form-checkbox bg-zinc-800' />
                   <span>Remember me</span>
@@ -114,7 +116,7 @@ const Login = () => {
               {isSignInForm ? 'New to Netflix? Sign Up Now' : 'Already Registered? Sign In Now'}
             </p>
 
-            <footer className='mt-8 text-xs text-gray-500 max-w-md'>
+            <footer className='hidden md:inline-block mt-8 text-xs text-gray-500 max-w-md'>
               <p>
                 This page is protected by Google reCAPTCHA to ensure you're not a bot.{' '}
                 <a href='#' className='text-blue-600 hover:underline'>
